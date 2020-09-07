@@ -1,6 +1,15 @@
-const CustomError = require("../extensions/custom-error");
+module.exports = function transform(arr) {
+  if (!Array.isArray(arr)) throw new Error();
 
-module.exports = function transform(/* arr */) {
-  throw new CustomError('Not implemented');
-  // remove line with error and write your code here
-};
+  let array = [];
+
+  arr.map((n, i) => {
+    if (n == '--double-next') return array[i] = arr[i + 1];
+    if (n == '--double-prev') return array[i] = arr[i - 1];
+    if (n == '--discard-next') return arr.splice(i + 1, 1);
+    if (n == '--discard-prev') return array.splice(i - 1, 1);
+    return array.push(n);
+  })
+
+  return array.filter(a => a !== undefined);
+}
