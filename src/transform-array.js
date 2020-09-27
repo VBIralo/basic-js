@@ -3,13 +3,33 @@ module.exports = function transform(arr) {
 
   let array = [];
 
-  arr.map((n, i) => {
-    if (n == '--double-next') return array[i] = arr[i + 1];
-    if (n == '--double-prev') return array[i] = arr[i - 1];
-    if (n == '--discard-next') return arr.splice(i + 1, 1);
-    if (n == '--discard-prev') return array.splice(i - 1, 1);
-    return array.push(n);
-  })
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === '--double-next') {
+      if (i < arr.length - 1) {
+        array.push(arr[i + 1]);
+      };
+      continue;
+    }
+    if (arr[i] === '--double-prev') {
+      if (i !== 0 && arr[i - 2] !== "--discard-next") {
+        array.push(arr[i - 1]);
+      };
+      continue;
+    }
+    if (arr[i] === '--discard-next') {
+      i++;
+      continue;
+    }
 
-  return array.filter(a => a !== undefined);
+    if (arr[i] === '--discard-prev') {
+      if (array.length !== 0 && arr[i - 2] !== "--discard-next") {
+        array.pop();
+      }
+      continue;
+    }
+
+    array.push(arr[i]);
+  }
+
+  return array
 }
